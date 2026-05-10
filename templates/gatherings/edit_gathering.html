@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Edit Gathering{% endblock %}
+{% block content %}
+
+<div class="form-container">
+    <h2>Edit Gathering</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label>Gathering Name</label>
+            <input type="text" name="gathering_name" class="form-control"
+                   value="{{ gathering[1] }}" required>
+        </div>
+        <div class="form-group">
+            <label>Category</label>
+            <input type="text" name="category" class="form-control"
+                   value="{{ gathering[2] }}">
+        </div>
+        <div class="form-group">
+            <label>Start Date & Time</label>
+            <input type="datetime-local" name="start_datetime" class="form-control"
+                   value="{{ gathering[3] | string | replace(' ', 'T') }}" required>
+        </div>
+        <div class="form-group">
+            <label>End Date & Time</label>
+            <input type="datetime-local" name="end_datetime" class="form-control"
+                   value="{{ gathering[4] | string | replace(' ', 'T') }}" required>
+        </div>
+        <div class="form-group">
+            <label>Venue</label>
+            <select name="venue_id" class="form-control" required>
+                {% for v in venues %}
+                <option value="{{ v[0] }}"
+                    {% if v[0] == gathering[5] %}selected{% endif %}>
+                    {{ v[1] }} ({{ v[2] }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Gathering</button>
+        <a href="{{ url_for('gatherings.list_gatherings') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+{% endblock %}

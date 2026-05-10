@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Add Venue{% endblock %}
+{% block content %}
+
+<div class="form-container">
+    <h2>Add New Venue</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label>Venue Name</label>
+            <input type="text" name="venue_name" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Location</label>
+            <input type="text" name="location" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Max Capacity</label>
+            <input type="number" name="max_capacity" class="form-control" min="1" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Venue</button>
+        <a href="{{ url_for('venues.list_venues') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+{% endblock %}

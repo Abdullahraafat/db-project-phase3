@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Inquiry 2 - Venues with No Passes{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h2>Inquiry 2: Venues with No Entry Passes Sold Last Month</h2>
+    <a href="{{ url_for('venues.list_venues') }}" class="btn btn-secondary">← Back to Venues</a>
+</div>
+
+{% if results %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Venue ID</th>
+            <th>Venue Name</th>
+            <th>Location</th>
+            <th>Gathering ID</th>
+            <th>Gathering Name</th>
+            <th>Start Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in results %}
+        <tr>
+            <td>{{ r[0] }}</td>
+            <td>{{ r[1] }}</td>
+            <td>{{ r[2] }}</td>
+            <td>{{ r[3] }}</td>
+            <td>{{ r[4] }}</td>
+            <td>{{ r[5] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">
+    No venues found — all gatherings last month had entry passes sold.
+</div>
+{% endif %}
+
+{% endblock %}

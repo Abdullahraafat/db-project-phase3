@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Venues{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h2>Venues</h2>
+    <a href="{{ url_for('venues.add_venue_route') }}" class="btn btn-primary">+ Add Venue</a>
+    <a href="{{ url_for('venues.inquiry2') }}" class="btn btn-warning">Inquiry 2: No Passes Last Month</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Venue Name</th>
+            <th>Location</th>
+            <th>Max Capacity</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for v in venues %}
+        <tr>
+            <td>{{ v[0] }}</td>
+            <td>{{ v[1] }}</td>
+            <td>{{ v[2] }}</td>
+            <td>{{ v[3] }}</td>
+            <td>
+                <a href="{{ url_for('venues.edit_venue_route', venue_id=v[0]) }}" class="btn btn-sm btn-edit">Edit</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">No venues found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

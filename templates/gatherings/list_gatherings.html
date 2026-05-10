@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Gatherings{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h2>Gatherings</h2>
+    <a href="{{ url_for('gatherings.add_gathering_route') }}" class="btn btn-primary">+ Add Gathering</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Venue</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for g in gatherings %}
+        <tr>
+            <td>{{ g[0] }}</td>
+            <td>{{ g[1] }}</td>
+            <td>{{ g[2] }}</td>
+            <td>{{ g[3] }}</td>
+            <td>{{ g[4] }}</td>
+            <td>{{ g[5] }}</td>
+            <td>
+                <a href="{{ url_for('gatherings.edit_gathering_route', gathering_id=g[0]) }}"
+                   class="btn btn-sm btn-edit">Edit</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7">No gatherings found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
