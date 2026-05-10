@@ -1,6 +1,7 @@
-from flask import Flask, render_template
-from routes.gatherings import gatherings_bp  # Adjust path as needed
+from flask import Flask, redirect, url_for
+from routes.gatherings import gatherings_bp
 from routes.venues import venues_bp
+
 
 app = Flask(__name__)
 
@@ -8,9 +9,9 @@ app = Flask(__name__)
 app.register_blueprint(gatherings_bp)
 app.register_blueprint(venues_bp)
 
-@app.route('/')
+@app.route('/', strict_slashes=True)
 def index():
-    return render_template('index.html')  # Make sure this exists
+    return redirect(url_for('gatherings.add_gathering_route'))
 
 if __name__ == '__main__':
     app.run(debug=True)

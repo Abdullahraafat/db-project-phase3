@@ -8,14 +8,14 @@ gatherings_bp = Blueprint('gatherings', __name__)
 
 
 # ── List all gatherings ──────────────────────────────────────────────────────
-@gatherings_bp.route('/gatherings')
+@gatherings_bp.route('/gatherings', strict_slashes=True)
 def list_gatherings():
     gatherings = get_all_gatherings()
     return render_template('gatherings/list_gatherings.html', gatherings=gatherings)
 
 
 # ── Add gathering ────────────────────────────────────────────────────────────
-@gatherings_bp.route('/gatherings/add', methods=['GET', 'POST'])
+@gatherings_bp.route('/gatherings/add', methods=['GET', 'POST'], strict_slashes=True)
 def add_gathering_route():
     venues = get_all_venues()
     if request.method == 'POST':
@@ -30,7 +30,7 @@ def add_gathering_route():
 
 
 # ── Edit gathering ───────────────────────────────────────────────────────────
-@gatherings_bp.route('/gatherings/edit/<int:gathering_id>', methods=['GET', 'POST'])
+@gatherings_bp.route('/gatherings/edit/<int:gathering_id>', methods=['GET', 'POST'], strict_slashes=True)
 def edit_gathering_route(gathering_id):
     gathering = get_gathering_by_id(gathering_id)
     venues    = get_all_venues()
