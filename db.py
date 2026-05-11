@@ -1,9 +1,12 @@
-import pyodbc
+import mysql.connector
 
 def get_connection():
-    return pyodbc.connect(
-        "DRIVER={SQL Server};"
-        "SERVER=.;"
-        "DATABASE=GatheringSystem;"
-        "Trusted_Connection=yes;"
+
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="",
+        database="GatheringSystem"
     )
+
+    return conn
