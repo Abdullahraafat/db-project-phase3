@@ -20,10 +20,11 @@ def add_entry_class():
         conn = get_connection()
         cursor = conn.cursor()
 
+        # UPDATED: Matches new table dbo.GatheringEntryClass and column SetPrice
         sql = """
-        INSERT INTO GATHERING_ENTRY_CLASS
-        (gathering_id, entry_class_id, price, allocated_seats)
-        VALUES (%s, %s, %s, %s)
+        INSERT INTO dbo.GatheringEntryClass
+        (GatheringID, EntryClassID, SetPrice, AllocatedSeats)
+        VALUES (?, ?, ?, ?)
         """
 
         values = (
@@ -34,16 +35,11 @@ def add_entry_class():
         )
 
         try:
-
             cursor.execute(sql, values)
             conn.commit()
-
         except Exception as e:
-
             return f"Error: {e}"
-
         finally:
-
             cursor.close()
             conn.close()
 
@@ -54,14 +50,14 @@ def add_entry_class():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT gathering_id, gathering_name
-        FROM GATHERING
+        SELECT GatheringID, GatheringName
+        FROM dbo.Gathering
     """)
     gatherings = cursor.fetchall()
 
     cursor.execute("""
-        SELECT entry_class_id, class_name
-        FROM ENTRY_CLASS
+        SELECT EntryClassID, ClassName
+        FROM dbo.EntryClass
     """)
     entry_classes = cursor.fetchall()
 
@@ -92,10 +88,10 @@ def update_entry_class():
         cursor = conn.cursor()
 
         sql = """
-        UPDATE GATHERING_ENTRY_CLASS
-        SET price = %s,
-            allocated_seats = %s
-        WHERE gathering_entry_class_id = %s
+        UPDATE dbo.GatheringEntryClass
+        SET SetPrice = ?,
+            AllocatedSeats = ?
+        WHERE GatheringEntryClassID = ?
         """
 
         values = (
@@ -105,15 +101,33 @@ def update_entry_class():
         )
 
         cursor.execute(sql, values)
-
         conn.commit()
-
         cursor.close()
         conn.close()
 
         return redirect('/')
 
-    return render_template('update_entry_class.html')
+    # GET REQUEST PART
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Fetch the ID along with the Gathering and Class names so the user knows what they are picking
+    cursor.execute("""
+        SELECT 
+            gec.GatheringEntryClassID, 
+            g.GatheringName, 
+            ec.ClassName
+        FROM dbo.GatheringEntryClass gec
+        JOIN dbo.Gathering g ON gec.GatheringID = g.GatheringID
+        JOIN dbo.EntryClass ec ON gec.EntryClassID = ec.EntryClassID
+    """)
+    
+    gec_records = cursor.fetchall()
+    
+    cursor.close()
+    conn.close()
+
+    return render_template('update_entry_class.html', gec_records=gec_records)
 
 
 # =====================================
@@ -126,24 +140,25 @@ def inquiry1():
     conn = get_connection()
     cursor = conn.cursor()
 
+    # UPDATED: Matches new Inquiry 1 logic from your SQL script
     sql = """
-    SELECT
-        g.category,
-        COUNT(ep.entry_pass_id) AS total_passes
-    FROM GATHERING g
-    JOIN GATHERING_ENTRY_CLASS gec
-        ON g.gathering_id = gec.gathering_id
-    JOIN ENTRY_PASS ep
-        ON gec.gathering_entry_class_id = ep.gathering_entry_class_id
-    GROUP BY g.category
-    ORDER BY total_passes DESC
-    LIMIT 1
+    SELECT TOP (1) WITH TIES
+        gc.CategoryName,
+        COUNT(ep.EntryPassID) AS EntryPassesSold
+    FROM dbo.GatheringCategory AS gc
+    INNER JOIN dbo.Gathering AS g
+        ON gc.CategoryID = g.CategoryID
+    INNER JOIN dbo.GatheringEntryClass AS gec
+        ON g.GatheringID = gec.GatheringID
+    INNER JOIN dbo.EntryPass AS ep
+        ON gec.GatheringEntryClassID = ep.GatheringEntryClassID
+    WHERE ep.PassStatus IN ('Purchased', 'CheckedIn')
+    GROUP BY gc.CategoryName
+    ORDER BY EntryPassesSold DESC
     """
 
     cursor.execute(sql)
-
     result = cursor.fetchall()
-
     cursor.close()
     conn.close()
 
@@ -163,23 +178,22 @@ def inquiry5():
     conn = get_connection()
     cursor = conn.cursor()
 
+    # UPDATED: Matches new Inquiry 5 table joins and columns
     sql = """
-SELECT
-    g.gathering_name,
-    ec.class_name,
-    gec.price,
-    gec.allocated_seats
-FROM GATHERING g
-JOIN GATHERING_ENTRY_CLASS gec
-    ON g.gathering_id = gec.gathering_id
-JOIN ENTRY_CLASS ec
-    ON gec.entry_class_id = ec.entry_class_id
-"""
+    SELECT
+        g.GatheringName,
+        ec.ClassName,
+        gec.SetPrice,
+        gec.AllocatedSeats
+    FROM dbo.Gathering AS g
+    INNER JOIN dbo.GatheringEntryClass AS gec
+        ON g.GatheringID = gec.GatheringID
+    INNER JOIN dbo.EntryClass AS ec
+        ON gec.EntryClassID = ec.EntryClassID
+    """
 
     cursor.execute(sql)
-
     result = cursor.fetchall()
-
     cursor.close()
     conn.close()
 
