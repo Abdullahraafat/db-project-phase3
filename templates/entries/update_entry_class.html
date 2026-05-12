@@ -1,24 +1,33 @@
-<h1>Update Entry Class</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Entry Class</title>
+</head>
+<body>
+    <h1>Update Entry Class</h1>
+    
+    <form method="POST">
+        <label>Select Combination to Update:</label>
+        <select name="gec_id" required>
+            <option value="" disabled selected>-- Select an Entry Class --</option>
+            {% for record in gec_records %}
+                <option value="{{ record[0] }}">{{ record[1] }} - {{ record[2] }}</option>
+            {% endfor %}
+        </select>
 
-<form method="POST">
+        <br><br>
 
-    <label>Gathering Entry Class ID</label>
-    <input type="number" name="gec_id">
+        <label>New Price</label>
+        <input type="number" step="0.01" name="price" required>
 
-    <br><br>
+        <br><br>
 
-    <label>New Price</label>
-    <input type="number" step="0.01" name="price">
+        <label>Allocated Seats</label>
+        <input type="number" name="allocated_seats" required>
 
-    <br><br>
+        <br><br>
 
-    <label>Allocated Seats</label>
-    <input type="number" name="allocated_seats">
-
-    <br><br>
-
-    <button type="submit">
-        Update
-    </button>
-
-</form>
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>
