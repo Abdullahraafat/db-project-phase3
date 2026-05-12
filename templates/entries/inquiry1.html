@@ -1,32 +1,21 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Inquiry 1</title>
 </head>
-
 <body>
-
     <h1>Most Popular Gathering Category</h1>
-
     <table border="1" cellpadding="10">
-
         <tr>
-            <th>Category</th>
-            <th>Total Passes</th>
+            <th>Category Name</th>
+            <th>Total Passes Sold</th>
         </tr>
-
         {% for row in result %}
-
         <tr>
             <td>{{ row[0] }}</td>
             <td>{{ row[1] }}</td>
         </tr>
-
         {% endfor %}
-
     </table>
-
 </body>
-
 </html>
