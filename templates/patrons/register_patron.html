@@ -1,46 +1,43 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register Patron</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Register Patron{% endblock %}
+{% block content %}
 
-<h2>Register Patron</h2>
+<div class="page-header">
+    <h2>Patron Management</h2>
+    <div>
+        <a href="{{ url_for('patrons.inquiry4') }}" class="btn btn-info btn-sm">Inquiry 4: No Passes</a>
+        <a href="{{ url_for('patrons.inquiry6') }}" class="btn btn-info btn-sm">Inquiry 6: Spending</a>
+        <a href="{{ url_for('patrons.purchase_pass') }}" class="btn btn-success btn-sm">Purchase Pass</a>
+    </div>
+</div>
 
-<form method="POST">
+<div class="form-container">
+    <h3>Register New Patron</h3>
 
-    <input type="text"
-           name="first_name"
-           placeholder="First Name"
-           required>
+    <form method="POST">
+        <div class="form-group">
+            <label>First Name</label>
+            <input type="text" name="first_name" class="form-control" placeholder="First Name" required>
+        </div>
 
-    <br><br>
+        <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" name="last_name" class="form-control" placeholder="Last Name" required>
+        </div>
 
-    <input type="text"
-           name="last_name"
-           placeholder="Last Name"
-           required>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" placeholder="Email" required>
+        </div>
 
-    <br><br>
+        <div class="form-group">
+            <label>Phone (Optional)</label>
+            <input type="text" name="phone" class="form-control" placeholder="Phone">
+        </div>
 
-    <input type="email"
-           name="email"
-           placeholder="Email"
-           required>
+        <button type="submit" class="btn btn-primary">Register Patron</button>
+        <a href="/" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
 
-    <br><br>
-
-    <input type="text"
-           name="phone"
-           placeholder="Phone">
-
-    <br><br>
-
-    <button type="submit">
-        Register
-    </button>
-
-</form>
-
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Home - GatheringSystem{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h1>Welcome to GatheringSystem</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">🏢 Venues</h5>
+                <p class="card-text">Manage event venues and their capacities.</p>
+                <a href="{{ url_for('venues.list_venues') }}" class="btn btn-primary">Manage Venues</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">📅 Gatherings</h5>
+                <p class="card-text">Schedule and manage events and gatherings.</p>
+                <a href="{{ url_for('gatherings.list_gatherings') }}" class="btn btn-primary">Manage Gatherings</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">🎫 Entry Classes</h5>
+                <p class="card-text">Configure ticket types and pricing for gatherings.</p>
+                <a href="{{ url_for('entry_bp.add_entry_class') }}" class="btn btn-primary">Manage Entry Classes</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">👥 Patrons</h5>
+                <p class="card-text">Register patrons and manage ticket purchases.</p>
+                <a href="{{ url_for('patrons.register_patron') }}" class="btn btn-primary">Manage Patrons</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">👔 Staff</h5>
+                <p class="card-text">Manage staff members and event assignments.</p>
+                <a href="{{ url_for('staff.manage_staff') }}" class="btn btn-primary">Manage Staff</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

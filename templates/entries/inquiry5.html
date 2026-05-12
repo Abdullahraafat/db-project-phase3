@@ -1,25 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Inquiry 5</title>
-</head>
-<body>
-    <h1>Available Entry Classes per Gathering</h1>
-    <table border="1" cellpadding="10">
+{% extends "base.html" %}
+{% block title %}Inquiry 5 - Entry Classes per Gathering{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h2>Inquiry 5: Available Entry Classes per Gathering</h2>
+    <a href="{{ url_for('entry_bp.add_entry_class') }}" class="btn btn-secondary">← Back</a>
+</div>
+
+{% if result %}
+<table class="table table-hover">
+    <thead class="table-dark">
         <tr>
             <th>Gathering Name</th>
             <th>Entry Class</th>
             <th>Price</th>
             <th>Allocated Seats</th>
         </tr>
+    </thead>
+    <tbody>
         {% for row in result %}
         <tr>
             <td>{{ row[0] }}</td>
             <td>{{ row[1] }}</td>
-            <td>{{ row[2] }}</td>
+            <td>${{ "%.2f"|format(row[2]) }}</td>
             <td>{{ row[3] }}</td>
         </tr>
         {% endfor %}
-    </table>
-</body>
-</html>
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">
+    No entry class data available.
+</div>
+{% endif %}
+
+{% endblock %}

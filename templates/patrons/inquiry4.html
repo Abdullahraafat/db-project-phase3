@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Inquiry 4 - Patrons with No Passes{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h2>Inquiry 4: Patrons with No Entry Passes Last Month</h2>
+    <a href="{{ url_for('patrons.register_patron') }}" class="btn btn-secondary">← Back</a>
+</div>
+
+{% if patrons %}
+<table class="table table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Patron ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for patron in patrons %}
+        <tr>
+            <td>{{ patron[0] }}</td>
+            <td>{{ patron[1] }}</td>
+            <td>{{ patron[2] }}</td>
+            <td>{{ patron[3] }}</td>
+            <td>{{ patron[4] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">
+    No patrons found — all patrons purchased passes last month.
+</div>
+{% endif %}
+
+{% endblock %}

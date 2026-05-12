@@ -1,21 +1,33 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Inquiry 1</title>
-</head>
-<body>
-    <h1>Most Popular Gathering Category</h1>
-    <table border="1" cellpadding="10">
+{% extends "base.html" %}
+{% block title %}Inquiry 1 - Most Popular Category{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h2>Inquiry 1: Most Popular Gathering Category</h2>
+    <a href="{{ url_for('entry_bp.add_entry_class') }}" class="btn btn-secondary">← Back</a>
+</div>
+
+{% if result %}
+<table class="table table-hover">
+    <thead class="table-dark">
         <tr>
             <th>Category Name</th>
             <th>Total Passes Sold</th>
         </tr>
+    </thead>
+    <tbody>
         {% for row in result %}
         <tr>
             <td>{{ row[0] }}</td>
             <td>{{ row[1] }}</td>
         </tr>
         {% endfor %}
-    </table>
-</body>
-</html>
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">
+    No data available.
+</div>
+{% endif %}
+
+{% endblock %}

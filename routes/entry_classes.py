@@ -1,203 +1,55 @@
-from flask import Blueprint, render_template, request, redirect
-from db import get_connection
+from flask import Blueprint, render_template, request, redirect, url_for
+from services.entry_class_db import (
+    get_all_entry_classes, get_all_gec_records,
+    add_gathering_entry_class, update_gathering_entry_class,
+    get_most_popular_category, get_entry_classes_per_gathering,
+)
+from services.gathering_db import get_all_gatherings
 
 entry_bp = Blueprint('entry_bp', __name__)
 
-# =====================================
-# ADD ENTRY CLASS
-# =====================================
 
 @entry_bp.route('/add_entry_class', methods=['GET', 'POST'])
 def add_entry_class():
-
     if request.method == 'POST':
-
-        gathering_id = request.form['gathering_id']
-        entry_class_id = request.form['entry_class_id']
-        price = request.form['price']
-        allocated_seats = request.form['allocated_seats']
-
-        conn = get_connection()
-        cursor = conn.cursor()
-
-        # UPDATED: Matches new table dbo.GatheringEntryClass and column SetPrice
-        sql = """
-        INSERT INTO dbo.GatheringEntryClass
-        (GatheringID, EntryClassID, SetPrice, AllocatedSeats)
-        VALUES (?, ?, ?, ?)
-        """
-
-        values = (
-            gathering_id,
-            entry_class_id,
-            price,
-            allocated_seats
+        add_gathering_entry_class(
+            request.form['gathering_id'],
+            request.form['entry_class_id'],
+            request.form['price'],
+            request.form['allocated_seats'],
         )
+        return redirect(url_for('entry_bp.add_entry_class'))
 
-        try:
-            cursor.execute(sql, values)
-            conn.commit()
-        except Exception as e:
-            return f"Error: {e}"
-        finally:
-            cursor.close()
-            conn.close()
-
-        return redirect('/')
-
-    # GET REQUEST PART
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT GatheringID, GatheringName
-        FROM dbo.Gathering
-    """)
-    gatherings = cursor.fetchall()
-
-    cursor.execute("""
-        SELECT EntryClassID, ClassName
-        FROM dbo.EntryClass
-    """)
-    entry_classes = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
-
+    gatherings    = get_all_gatherings()
+    entry_classes = get_all_entry_classes()
     return render_template(
-        'add_entry_class.html',
+        'entries/add_entry_class.html',
         gatherings=gatherings,
-        entry_classes=entry_classes
+        entry_classes=entry_classes,
     )
 
-
-# =====================================
-# UPDATE ENTRY CLASS
-# =====================================
 
 @entry_bp.route('/update_entry_class', methods=['GET', 'POST'])
 def update_entry_class():
-
     if request.method == 'POST':
-
-        gec_id = request.form['gec_id']
-        price = request.form['price']
-        allocated_seats = request.form['allocated_seats']
-
-        conn = get_connection()
-        cursor = conn.cursor()
-
-        sql = """
-        UPDATE dbo.GatheringEntryClass
-        SET SetPrice = ?,
-            AllocatedSeats = ?
-        WHERE GatheringEntryClassID = ?
-        """
-
-        values = (
-            price,
-            allocated_seats,
-            gec_id
+        update_gathering_entry_class(
+            request.form['gec_id'],
+            request.form['price'],
+            request.form['allocated_seats'],
         )
+        return redirect(url_for('entry_bp.update_entry_class'))
 
-        cursor.execute(sql, values)
-        conn.commit()
-        cursor.close()
-        conn.close()
+    gec_records = get_all_gec_records()
+    return render_template('entries/update_entry_class.html', gec_records=gec_records)
 
-        return redirect('/')
-
-    # GET REQUEST PART
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    # Fetch the ID along with the Gathering and Class names so the user knows what they are picking
-    cursor.execute("""
-        SELECT 
-            gec.GatheringEntryClassID, 
-            g.GatheringName, 
-            ec.ClassName
-        FROM dbo.GatheringEntryClass gec
-        JOIN dbo.Gathering g ON gec.GatheringID = g.GatheringID
-        JOIN dbo.EntryClass ec ON gec.EntryClassID = ec.EntryClassID
-    """)
-    
-    gec_records = cursor.fetchall()
-    
-    cursor.close()
-    conn.close()
-
-    return render_template('update_entry_class.html', gec_records=gec_records)
-
-
-# =====================================
-# INQUIRY 1
-# =====================================
 
 @entry_bp.route('/inquiry1')
 def inquiry1():
+    result = get_most_popular_category()
+    return render_template('entries/inquiry1.html', result=result)
 
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    # UPDATED: Matches new Inquiry 1 logic from your SQL script
-    sql = """
-    SELECT TOP (1) WITH TIES
-        gc.CategoryName,
-        COUNT(ep.EntryPassID) AS EntryPassesSold
-    FROM dbo.GatheringCategory AS gc
-    INNER JOIN dbo.Gathering AS g
-        ON gc.CategoryID = g.CategoryID
-    INNER JOIN dbo.GatheringEntryClass AS gec
-        ON g.GatheringID = gec.GatheringID
-    INNER JOIN dbo.EntryPass AS ep
-        ON gec.GatheringEntryClassID = ep.GatheringEntryClassID
-    WHERE ep.PassStatus IN ('Purchased', 'CheckedIn')
-    GROUP BY gc.CategoryName
-    ORDER BY EntryPassesSold DESC
-    """
-
-    cursor.execute(sql)
-    result = cursor.fetchall()
-    cursor.close()
-    conn.close()
-
-    return render_template(
-        'inquiry1.html',
-        result=result
-    )
-
-
-# =====================================
-# INQUIRY 5
-# =====================================
 
 @entry_bp.route('/inquiry5')
 def inquiry5():
-
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    # UPDATED: Matches new Inquiry 5 table joins and columns
-    sql = """
-    SELECT
-        g.GatheringName,
-        ec.ClassName,
-        gec.SetPrice,
-        gec.AllocatedSeats
-    FROM dbo.Gathering AS g
-    INNER JOIN dbo.GatheringEntryClass AS gec
-        ON g.GatheringID = gec.GatheringID
-    INNER JOIN dbo.EntryClass AS ec
-        ON gec.EntryClassID = ec.EntryClassID
-    """
-
-    cursor.execute(sql)
-    result = cursor.fetchall()
-    cursor.close()
-    conn.close()
-
-    return render_template(
-        'inquiry5.html',
-        result=result
-    )
+    result = get_entry_classes_per_gathering()
+    return render_template('entries/inquiry5.html', result=result)
