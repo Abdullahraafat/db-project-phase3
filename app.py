@@ -1,9 +1,11 @@
 from flask import Flask
 from routes.entry_classes import entry_bp
+from routes.patrons import patrons_bp
 
 app = Flask(__name__)
 
 app.register_blueprint(entry_bp)
+app.register_blueprint(patrons_bp)
 
 @app.route('/')
 def home():
@@ -19,6 +21,17 @@ def home():
 
     <a href='/update_entry_class'>
         Update Entry Class
+    </a>
+
+    <br><br>
+     <a href='/register_patron'>
+        Register Patron
+    </a>
+
+    <br><br>
+
+    <a href='/purchase_pass'>
+        Purchase Pass
     </a>
 
     <br><br>
