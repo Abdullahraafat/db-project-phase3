@@ -3,6 +3,25 @@
 <div class="container mt-4">
     <h1>Staff Management Portal</h1>
 
+    <div class="card p-4 shadow-sm mb-5">
+        <h3>Register New Staff Member</h3>
+        <form action="{{ url_for('staff.add_new_staff') }}" method="POST" class="row g-3">
+            <div class="col-md-3">
+                <input type="text" name="first_name" class="form-control" placeholder="First Name" required>
+            </div>
+            <div class="col-md-3">
+                <input type="text" name="last_name" class="form-control" placeholder="Last Name" required>
+            </div>
+            <div class="col-md-3">
+                <input type="email" name="email" class="form-control" placeholder="Email" required>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-success w-100">Add to Roster</button>
+            </div>
+        </form>
+    </div>
+
+    <h3>Current Staff Roster</h3>
     <table class="table table-hover border mt-3">
         <thead class="table-dark">
             <tr><th>ID</th><th>Full Name</th></tr>
@@ -62,7 +81,7 @@
 
     {% if top_coord %}
     <div class="alert alert-info mt-5 p-4">
-        <h4 class="alert-heading"> Inquiry 3: Top Performing Coordinator</h4>
+        <h4 class="alert-heading">Inquiry 3: Top Performing Coordinator</h4>
         <p class="mb-0">The coordinator with the most managed events is <strong>{{ top_coord[0] }}</strong> with <strong>{{ top_coord[1] }}</strong> gatherings.</p>
     </div>
     {% endif %}
